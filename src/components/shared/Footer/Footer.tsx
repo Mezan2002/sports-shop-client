@@ -61,7 +61,7 @@ const Footer = () => {
             <div className=" text-center md:text-left mt-5">
               <div className="text-sm">
                 <p className="my-8 font-bold">
-                  All Rights Reserved © 2024 Digital Mart Developed by{" "}
+                  All Rights Reserved © 2024 Champso Developed by{" "}
                   <span className="text-indigo-500">Mezanur Rahman</span>
                 </p>
                 <p className="my-6">Got Question? Call us 24/7</p>
@@ -351,7 +351,7 @@ const Footer = () => {
         </div>
         <div className="grid justify-center pt-6 lg:justify-between">
           <div className="flex flex-col self-center text-sm text-center md:block lg:col-start-1 md:space-x-6">
-            <span>© 2024 Digital Mart. All Rights Reserved.</span>
+            <span>© 2024 Champso. All Rights Reserved.</span>
             <Link to="/" className="mt-5 md:mt-0">
               <span>Privacy policy</span>
             </Link>

@@ -4,6 +4,41 @@
 @tailwind components;
 @tailwind utilities;
 
+:root {
+  --brand-color: #6366f1;
+}
+
 body {
   font-family: "Montserrat";
+}
+
+/* Customize Swiper pagination bullets */
+.swiper-pagination-custom .swiper-pagination-bullet {
+  background-color: transparent;
+  border: 2px solid black;
+  height: 10px;
+  width: 10px;
+}
+
+.swiper-pagination-custom .swiper-pagination-bullet-active {
+  background-color: var(--brand-color);
+  border: none;
+}
+
+.no-scrollbar {
+  overflow: scroll; /* Enable scrolling */
+}
+
+.no-scrollbar::-webkit-scrollbar {
+  width: 0; /* Hide scrollbar */
+  height: 0; /* Hide scrollbar for horizontal scroll */
+}
+/* Hide scrollbar for Firefox */
+.no-scrollbar {
+  scrollbar-width: none; /* Hide scrollbar */
+}
+
+/* Hide scrollbar for IE and older Edge */
+.no-scrollbar {
+  -ms-overflow-style: none; /* Hide scrollbar */
 }

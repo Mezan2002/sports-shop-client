@@ -1,7 +1,6 @@
 import {
   Button,
   Checkbox,
-  Input,
   Modal,
   ModalBody,
   ModalContent,
@@ -9,7 +8,6 @@ import {
   ModalHeader,
   Select,
   SelectItem,
-  Slider,
   useDisclosure,
 } from "@nextui-org/react";
 import { useState } from "react";
@@ -20,7 +18,6 @@ import ProductCard from "./ProductCard/ProductCard";
 
 const AllProducts = () => {
   // State to manage the slider value
-  const [value, setValue] = useState([0, 5000]);
   const [scrollBehavior, setScrollBehavior] = useState("inside");
   const { isOpen, onOpen, onOpenChange } = useDisclosure();
 
@@ -42,30 +39,6 @@ const AllProducts = () => {
     {
       title: "Smartphones",
     },
-    {
-      title: "Cameras",
-    },
-    {
-      title: "Keyboard & Mouse",
-    },
-    {
-      title: "Video Games",
-    },
-    {
-      title: "Smart Watch",
-    },
-    {
-      title: "Headphones & Audios",
-    },
-    {
-      title: "Video Projectors",
-    },
-    {
-      title: "Networking Devices",
-    },
-    {
-      title: "Hot Selling Products",
-    },
   ];
   const brandItems = [
     {
@@ -76,34 +49,6 @@ const AllProducts = () => {
     },
     {
       brandTitle: "Samsung",
-    },
-    {
-      brandTitle: "Walton",
-    },
-
-    {
-      brandTitle: "Lenovo",
-    },
-    {
-      brandTitle: "Google",
-    },
-    {
-      brandTitle: "Microsoft",
-    },
-    {
-      brandTitle: "Sony",
-    },
-    {
-      brandTitle: "Canon",
-    },
-    {
-      brandTitle: "Symphony",
-    },
-    {
-      brandTitle: "Itel",
-    },
-    {
-      brandTitle: "One Plus",
     },
   ];
   const sortByData = [
@@ -169,68 +114,7 @@ const AllProducts = () => {
                           </Checkbox>
                         ))}
                       </div>
-                      <div className="mb-10">
-                        <h4 className="my-3 uppercase border-b-1 pb-2 flex justify-between items-center text-2xl font-semibold">
-                          Price Range{" "}
-                        </h4>
-                        <div className="flex items-center mt-3">
-                          <Input
-                            type="text"
-                            placeholder="Min"
-                            className="border rounded-xl"
-                            value={value[0]}
-                            onChange={(e) =>
-                              handleSliderChange(e, [e.target.value, value[1]])
-                            }
-                            startContent={
-                              <div className="pointer-events-none flex items-center">
-                                <span className="text-default-400 text-small">
-                                  $
-                                </span>
-                              </div>
-                            }
-                          />
-                          <p className="mx-2"> - </p>
-                          <Input
-                            type="text"
-                            value={value[1]}
-                            onChange={(e) =>
-                              handleSliderChange(e, [value[0], e.target.value])
-                            }
-                            placeholder="Max"
-                            className="border rounded-xl"
-                            startContent={
-                              <div className="pointer-events-none flex items-center">
-                                <span className="text-default-400 text-small">
-                                  $
-                                </span>
-                              </div>
-                            }
-                          />
-                        </div>
-                        <div className="mt-2 px-2">
-                          <Slider
-                            value={value}
-                            onChange={handleSliderChange}
-                            valueLabelDisplay="auto"
-                            valueLabelFormat={(value) => `$${value}`}
-                            min={0}
-                            max={5000}
-                          />
-                        </div>
-                        <div className="flex items-center justify-between">
-                          <p className="text-sm font-semibold">
-                            {" "}
-                            Price: ${value[0]} - ${value[1]}{" "}
-                          </p>
-                          <Button
-                            size="sm"
-                            className="bg-indigo-500 text-white"
-                          >
-                            Filter
-                          </Button>
-                        </div>
-                      </div>
+
                       <div className="mb-10">
                         <h4 className="my-3 uppercase border-b-1 pb-2 flex justify-between items-center text-2xl font-semibold">
                           Products Status{" "}
@@ -326,61 +210,6 @@ const AllProducts = () => {
                   {item.brandTitle}
                 </Checkbox>
               ))}
-            </div>
-            <div className="mb-10">
-              <h4 className="my-3 uppercase border-b-1 pb-2 flex justify-between items-center text-2xl font-semibold">
-                Price Range{" "}
-              </h4>
-              <div className="flex items-center mt-3">
-                <Input
-                  type="text"
-                  placeholder="Min"
-                  className="border rounded-xl"
-                  value={value[0]}
-                  onChange={(e) =>
-                    handleSliderChange(e, [e.target.value, value[1]])
-                  }
-                  startContent={
-                    <div className="pointer-events-none flex items-center">
-                      <span className="text-default-400 text-small">$</span>
-                    </div>
-                  }
-                />
-                <p className="mx-2"> - </p>
-                <Input
-                  type="text"
-                  value={value[1]}
-                  onChange={(e) =>
-                    handleSliderChange(e, [value[0], e.target.value])
-                  }
-                  placeholder="Max"
-                  className="border rounded-xl"
-                  startContent={
-                    <div className="pointer-events-none flex items-center">
-                      <span className="text-default-400 text-small">$</span>
-                    </div>
-                  }
-                />
-              </div>
-              <div className="mt-2 px-2">
-                <Slider
-                  value={value}
-                  onChange={handleSliderChange}
-                  valueLabelDisplay="auto"
-                  valueLabelFormat={(value) => `$${value}`}
-                  min={0}
-                  max={5000}
-                />
-              </div>
-              <div className="flex items-center justify-between">
-                <p className="text-sm font-semibold">
-                  {" "}
-                  Price: ${value[0]} - ${value[1]}{" "}
-                </p>
-                <Button size="sm" className="bg-indigo-500 text-white">
-                  Filter
-                </Button>
-              </div>
             </div>
             <div className="mb-10">
               <h4 className="my-3 uppercase border-b-1 pb-2 flex justify-between items-center text-2xl font-semibold">
