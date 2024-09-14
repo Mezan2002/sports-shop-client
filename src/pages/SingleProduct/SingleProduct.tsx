@@ -10,12 +10,26 @@ import { Button, Chip, Tab, Tabs } from "@nextui-org/react";
 import { useState } from "react";
 import { BiMinus, BiPlus } from "react-icons/bi";
 import { CiHeart, CiShoppingCart } from "react-icons/ci";
+import { useParams } from "react-router-dom";
 import "swiper/css";
 import "swiper/css/navigation";
 import "swiper/css/pagination";
+import {
+  decrementQuantity,
+  increamentQuantity,
+} from "../../redux/features/product/productQuantitySlice";
+import { useAppDispatch, useAppSelector } from "../../redux/hooks";
 import ProductRating from "./ProductRating/ProductRating";
 
 const SingleProduct = () => {
+  const data = useAppSelector((state) => state.productQuantity);
+  const dispatch = useAppDispatch();
+  const { id } = useParams();
+
+  const singleProductToUpdateQuantity = data.find(
+    (product) => product.id === id
+  );
+
   const [rating, setRating] = useState(4.5);
 
   const handleRatingChange = (newRating) => {
@@ -125,12 +139,18 @@ const SingleProduct = () => {
                 Quantity
               </p>
               <div className="w-8/12 h-12 flex justify-between items-center p-2 rounded-full bg-gray-light border">
-                <button className="bg-indigo-500 text-white rounded-full p-2">
-                  <BiPlus />
-                </button>
-                <p>05</p>
-                <button className="bg-indigo-500 text-white rounded-full p-2">
+                <button
+                  onClick={() => dispatch(decrementQuantity("1"))}
+                  className="bg-indigo-500 text-white rounded-full p-2"
+                >
                   <BiMinus />
+                </button>
+                <p>{singleProductToUpdateQuantity?.quantity}</p>
+                <button
+                  onClick={() => dispatch(increamentQuantity("1"))}
+                  className="bg-indigo-500 text-white rounded-full p-2"
+                >
+                  <BiPlus />
                 </button>
               </div>
             </div>

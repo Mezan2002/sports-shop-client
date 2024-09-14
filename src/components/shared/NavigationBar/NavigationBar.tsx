@@ -1,6 +1,5 @@
 import {
   Badge,
-  Link,
   Navbar,
   NavbarContent,
   NavbarMenu,
@@ -13,6 +12,7 @@ import {
   AiOutlineShoppingCart,
   AiOutlineUser,
 } from "react-icons/ai";
+import { Link } from "react-router-dom";
 
 const NavigationBar = () => {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
@@ -43,7 +43,7 @@ const NavigationBar = () => {
         />
         <NavbarContent className="w-4/12 items-center">
           <div className="md:hidden block">
-            <Link href="/">
+            <Link to="/">
               <img
                 draggable
                 src="/src/assets/images/logo.png"
@@ -52,7 +52,7 @@ const NavigationBar = () => {
             </Link>
           </div>
           <div className="mr-4 hidden md:flex">
-            <Link href="/">
+            <Link to="/">
               <img
                 draggable
                 src="/src/assets/images/logo.png"
@@ -68,7 +68,7 @@ const NavigationBar = () => {
             {navItems.map((nav) => (
               <li key={nav.title}>
                 <Link
-                  href={nav.path}
+                  to={nav.path}
                   className="text-black uppercase font-semibold"
                 >
                   {nav.title}
@@ -93,7 +93,7 @@ const NavigationBar = () => {
               <AiOutlineHeart size={32} />
             </Badge>
           </div>
-          <div className="mt-2">
+          <Link to="/cart" className="mt-2">
             <div className="flex items-center">
               <Badge content="0" size="md" className="bg-indigo-500 text-white">
                 <AiOutlineShoppingCart size={32} />
@@ -105,7 +105,7 @@ const NavigationBar = () => {
                 </p>
               </div>
             </div>
-          </div>
+          </Link>
         </NavbarContent>
         <NavbarMenu>
           {menuItems.map((item, index) => (
@@ -119,7 +119,7 @@ const NavigationBar = () => {
                     : "foreground"
                 }
                 className="w-full border-b-2 py-2"
-                href="#"
+                to="/"
                 size="lg"
               >
                 {item}

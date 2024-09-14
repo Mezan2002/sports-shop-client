@@ -1,11 +1,9 @@
 import { Card, CardBody, Chip, Tooltip } from "@nextui-org/react";
 import {
   AiFillStar,
-  AiOutlineEye,
   AiOutlineHeart,
   AiOutlineShoppingCart,
 } from "react-icons/ai";
-import { PiArrowsClockwiseBold } from "react-icons/pi";
 import { Link } from "react-router-dom";
 
 const ProductCard = ({ isTopSell, isOffSell, isNewArrival, isGridCard }) => {
@@ -13,14 +11,6 @@ const ProductCard = ({ isTopSell, isOffSell, isNewArrival, isGridCard }) => {
     {
       icon: <AiOutlineHeart className="h-4 w-4" />,
       tooltipContent: "ADD TO WISHLIST",
-    },
-    {
-      icon: <PiArrowsClockwiseBold className="h-4 w-4" />,
-      tooltipContent: "COMPARE",
-    },
-    {
-      icon: <AiOutlineEye className="h-4 w-4" />,
-      tooltipContent: "QUICK VIEW",
     },
     {
       icon: <AiOutlineShoppingCart className="h-4 w-4" />,

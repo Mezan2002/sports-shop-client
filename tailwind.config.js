@@ -13,12 +13,12 @@ export default {
         gray: {
           DEFAULT: "#333237",
           light: "#F5F5F5",
-          ligher: "#B4B4B4",
+          lighter: "#B4B4B4",
         },
         dark: {
           DEFAULT: "#121214",
           light: "#29292C",
-          ligher: "#1E1E1F",
+          lighter: "#1E1E1F",
         },
         disabledText: "#C8C8C8",
       },

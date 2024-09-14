@@ -7,6 +7,7 @@ import Checkout from "../pages/Checkout/Checkout";
 import Home from "../pages/Home/Home";
 import ManageProduct from "../pages/ManageProduct/ManageProduct";
 import SingleProduct from "../pages/SingleProduct/SingleProduct";
+import Support from "../pages/Support/Support";
 
 const router = createBrowserRouter([
   {
@@ -40,6 +41,10 @@ const router = createBrowserRouter([
       {
         path: "manage-products",
         element: <ManageProduct />,
+      },
+      {
+        path: "support",
+        element: <Support />,
       },
     ],
   },
