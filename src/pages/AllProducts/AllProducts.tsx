@@ -8,47 +8,49 @@ import {
   ModalHeader,
   Select,
   SelectItem,
+  Spinner,
   useDisclosure,
 } from "@nextui-org/react";
-import { useState } from "react";
 import { AiOutlineUnorderedList } from "react-icons/ai";
 import { BsFilter, BsGrid } from "react-icons/bs";
 import NavigationHeader from "../../components/shared/NavigationHeader/NavigationHeader";
+import { useGetCategoriesQuery } from "../../redux/features/category/categoryApi";
+import { useGetAllProductsQuery } from "../../redux/features/product/productsApi";
+import { TProduct } from "../../types/types";
 import ProductCard from "./ProductCard/ProductCard";
 
 const AllProducts = () => {
   // State to manage the slider value
-  const [scrollBehavior, setScrollBehavior] = useState("inside");
   const { isOpen, onOpen, onOpenChange } = useDisclosure();
+  const {
+    data: products,
+    isLoading: isProductLoading,
+    isError: isProductError,
+    error: productError,
+  } = useGetAllProductsQuery(undefined);
 
-  // Function to handle slider value change
-  const handleSliderChange = (event, newValue) => {
-    setValue(newValue);
-  };
+  const {
+    data: categories,
+    isLoading: isCategoryLoading,
+    isError: isCategoryError,
+    error: categoryError,
+  } = useGetCategoriesQuery(undefined);
 
-  const categorieItems = [
-    {
-      title: "Computer & Laptop",
-    },
-    {
-      title: "Tablet & IPad",
-    },
-    {
-      title: "Printer",
-    },
-    {
-      title: "Smartphones",
-    },
-  ];
+  if (isProductError) {
+    console.error(productError);
+  }
+  if (isCategoryError) {
+    console.error(categoryError);
+  }
   const brandItems = [
     {
-      brandTitle: "Apple",
+      brandTitle: "Adidas",
     },
     {
-      brandTitle: "Real Me",
+      brandTitle: "Kookaburra",
     },
     {
-      brandTitle: "Samsung",
+      brandTitle: "CA",
     },
   ];
   const sortByData = [
@@ -60,6 +62,14 @@ const AllProducts = () => {
     { title: "Price Low to High" },
   ];
   const showItemsNumber = ["20 Items", "40 Items", "60 Items"];
+
+  if (isProductLoading || isCategoryLoading) {
+    return (
+      <div className="h-40 flex items-center justify-center">
+        <Spinner label="Loading..." color="warning" />
+      </div>
+    );
+  }
 
   return (
     <section>
@@ -75,7 +85,7 @@ const AllProducts = () => {
           <Modal
             isOpen={isOpen}
             onOpenChange={onOpenChange}
-            scrollBehavior={scrollBehavior}
+            scrollBehavior="inside"
           >
             <ModalContent>
               {(onClose) => (
@@ -89,12 +99,12 @@ const AllProducts = () => {
                         <h4 className="my-3 uppercase border-b-1 pb-2 flex justify-between items-center text-2xl font-semibold">
                           Categories{" "}
                           <span className="text-sm h-6 w-6 rounded-full bg-indigo-500 text-white flex items-center justify-center">
-                            {categorieItems.length}
+                            {categories?.data?.length}
                           </span>
                         </h4>
-                        {categorieItems.map((item) => (
-                          <Checkbox key={item.title} className="my-0.5 block">
-                            {item.title}
+                        {categories?.data?.map((item: TProduct) => (
+                          <Checkbox key={item?.id} className="my-0.5 block">
+                            {item?.name}
                           </Checkbox>
                         ))}
                       </div>
@@ -189,12 +199,12 @@ const AllProducts = () => {
               <h4 className="my-3 uppercase border-b-1 pb-2 flex justify-between items-center text-2xl font-semibold">
                 Categories{" "}
                 <span className="text-sm h-6 w-6 rounded-full bg-indigo-500 text-white flex items-center justify-center">
-                  {categorieItems.length}
+                  {categories?.data?.length}
                 </span>
               </h4>
-              {categorieItems.map((item) => (
-                <Checkbox key={item.title} className="my-0.5 block">
-                  {item.title}
+              {categories?.data?.map((item: TProduct) => (
+                <Checkbox key={item?.id} className="my-0.5 block">
+                  {item?.name}
                 </Checkbox>
               ))}
             </div>
@@ -229,11 +239,14 @@ const AllProducts = () => {
         </div>
         <div className="col-span-4 md:pl-3">
           <div className="grid md:grid-cols-4 grid-cols-1 px-4 md:px-0">
-            {[0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15].map(
-              (product) => (
-                <ProductCard key={product} isGridCard={true} />
-              )
-            )}
+            {products?.data &&
+              products?.data?.map((product: TProduct) => (
+                <ProductCard
+                  product={product}
+                  key={product.id}
+                  isGridCard={true}
+                />
+              ))}
           </div>
         </div>
       </div>

@@ -1,5 +1,5 @@
 import React from "react";
-import { FaRegStar, FaStar, FaStarHalfAlt } from "react-icons/fa";
+import { FaRegStar, FaStar } from "react-icons/fa";
 import Rating from "react-rating";
 
 interface ProductRatingProps {
@@ -18,12 +18,6 @@ const ProductRating: React.FC<ProductRatingProps> = ({ rating, onChange }) => {
         }
         fullSymbol={
           <FaStar style={{ fontSize: "1.5rem" }} className="text-indigo-500" />
-        }
-        halfSymbol={
-          <FaStarHalfAlt
-            style={{ fontSize: "1.5rem" }}
-            className="text-indigo-500"
-          />
         }
         fractions={2}
       />

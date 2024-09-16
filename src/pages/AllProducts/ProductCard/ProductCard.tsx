@@ -1,12 +1,16 @@
 import { Card, CardBody, Chip, Tooltip } from "@nextui-org/react";
-import {
-  AiFillStar,
-  AiOutlineHeart,
-  AiOutlineShoppingCart,
-} from "react-icons/ai";
+import { AiOutlineHeart, AiOutlineShoppingCart } from "react-icons/ai";
 import { Link } from "react-router-dom";
+import { TProductCardProps } from "../../../types/types";
+import ProductRating from "../../SingleProduct/ProductRating/ProductRating";
 
-const ProductCard = ({ isTopSell, isOffSell, isNewArrival, isGridCard }) => {
+const ProductCard: React.FC<TProductCardProps> = ({
+  isTopSell,
+  isOffSell,
+  isNewArrival,
+  isGridCard,
+  product,
+}) => {
   const miniIconsData = [
     {
       icon: <AiOutlineHeart className="h-4 w-4" />,
@@ -64,8 +68,8 @@ const ProductCard = ({ isTopSell, isOffSell, isNewArrival, isGridCard }) => {
             {/* card top image container end */}
             {/* buttons container start */}
             <div className="absolute top-6 -right-5 group-hover:right-5 opacity-0  duration-500 group-hover:opacity-100 flex flex-col items-center gap-3">
-              {miniIconsData.map((icon) => (
-                <div key={icon.icon}>
+              {miniIconsData.map((icon, index) => (
+                <div key={index}>
                   <Tooltip
                     delay={400}
                     showArrow
@@ -85,15 +89,15 @@ const ProductCard = ({ isTopSell, isOffSell, isNewArrival, isGridCard }) => {
           {/* card content container start */}
           <div>
             <div className="flex items-center justify-between mt-2 mb-4">
-              <p className="uppercase cursor-pointer">Umino</p>
+              <p className="uppercase cursor-pointer">{product.brand}</p>
               <Chip size="sm" className="bg-indigo-500 text-white">
                 In Stock
               </Chip>
             </div>
             <p className="text-lg font-medium cursor-pointer hover:text-indigo-500 duration-500">
-              {"Samsung Galaxy S21 FE 8GB/128GB - White".length > 42
-                ? "Samsung Galaxy S21 FE 8GB/128GB - White".slice(0, 42) + "..."
-                : "Samsung Galaxy S21 FE 8GB/128GB - White"}
+              {product.name.length > 42
+                ? product.name.slice(0, 42) + "..."
+                : product.name}
             </p>
             <div className="flex items-center justify-between mt-3">
               {isOffSell ? (
@@ -104,15 +108,13 @@ const ProductCard = ({ isTopSell, isOffSell, isNewArrival, isGridCard }) => {
                   </sup>
                 </h2>
               ) : (
-                <h2 className="font-bold text-lg text-indigo-500">$110.00</h2>
+                <h2 className="font-bold text-lg text-indigo-500">
+                  ${product.price}
+                </h2>
               )}
 
               <div className="flex items-center">
-                <AiFillStar className="text-yellow-400" />
-                <AiFillStar className="text-yellow-400" />
-                <AiFillStar className="text-yellow-400" />
-                <AiFillStar className="text-yellow-400" />
-                <AiFillStar className="text-yellow-400" />
+                <ProductRating onChange={() => {}} rating={product.rating} />
               </div>
             </div>
           </div>
