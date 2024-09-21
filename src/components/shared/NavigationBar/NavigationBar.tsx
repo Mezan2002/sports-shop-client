@@ -120,7 +120,6 @@ const NavigationBar = () => {
                 }
                 className="w-full border-b-2 py-2"
                 to="/"
-                size="lg"
               >
                 {item}
               </Link>

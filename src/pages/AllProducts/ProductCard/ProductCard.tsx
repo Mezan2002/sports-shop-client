@@ -25,11 +25,11 @@ const ProductCard: React.FC<TProductCardProps> = ({
     <Card
       className={`shadow-none group relative ${
         isGridCard
-          ? "rounded-none border-1 hover:z-40  hover:shadow-2xl"
+          ? "rounded-none border-1 hover:z-40 hover:shadow-2xl"
           : "rounded-3xl"
       }`}
     >
-      <Link to="/product/1">
+      <Link to={`/product/${product._id}`}>
         <CardBody className="overflow-x-hidden cursor-pointer">
           {/* chip start */}
           {isTopSell && (
@@ -51,18 +51,18 @@ const ProductCard: React.FC<TProductCardProps> = ({
           {/* card top container start */}
           <div>
             {/* card top image container start */}
-            <div className="w-[250px] mx-auto">
+            <div className="mb-2">
               <img
                 draggable
-                src="https://th.bing.com/th/id/R.0288f2ee5dc6cbb800fc5fa3bc05a0b6?rik=jz2i2w1l3JXGIg&riu=http%3a%2f%2fwww.pngmart.com%2ffiles%2f4%2fCricket-Bat-PNG-Pic.png&ehk=WIGN7NaX376jzPl%2fo1QdaVy2Zk9K%2bfvdem2KnONl6Iw%3d&risl=1&pid=ImgRaw&r=0"
+                src={product.images[0]}
                 alt="Image"
-                className="block group-hover:hidden transition-all duration-1000 max-h-80"
+                className="block group-hover:hidden transition-all duration-1000 h-80 object-cover"
               />
               <img
                 draggable
-                src="https://th.bing.com/th/id/R.0288f2ee5dc6cbb800fc5fa3bc05a0b6?rik=jz2i2w1l3JXGIg&riu=http%3a%2f%2fwww.pngmart.com%2ffiles%2f4%2fCricket-Bat-PNG-Pic.png&ehk=WIGN7NaX376jzPl%2fo1QdaVy2Zk9K%2bfvdem2KnONl6Iw%3d&risl=1&pid=ImgRaw&r=0"
+                src={product.images[1]}
                 alt="Image"
-                className="transition-all duration-1000 hidden group-hover:block max-h-80"
+                className="transition-all duration-1000 hidden group-hover:block h-80 object-cover"
               />
             </div>
             {/* card top image container end */}
@@ -94,27 +94,32 @@ const ProductCard: React.FC<TProductCardProps> = ({
                 In Stock
               </Chip>
             </div>
-            <p className="text-lg font-medium cursor-pointer hover:text-indigo-500 duration-500">
-              {product.name.length > 42
-                ? product.name.slice(0, 42) + "..."
-                : product.name}
+            <p className="text-lg font-medium cursor-pointer hover:text-indigo-500 duration-500 line-clamp-2 truncate">
+              {product.name}
             </p>
             <div className="flex items-center justify-between mt-3">
-              {isOffSell ? (
-                <h2 className="font-bold text-lg text-indigo-500">
-                  $110.00
+              <h2 className="font-bold text-lg text-indigo-500">
+                {product.price.currency === "USD" && "$"}
+                {product.price.discounted_price
+                  ? product.price.discounted_price
+                  : product.price.regular_price}
+                {product.price.discounted_price && (
                   <sup className="text-gray-400">
-                    <del>$150.00</del>
+                    <del>
+                      {product.price.discounted_price &&
+                        product.price.regular_price}
+                    </del>
                   </sup>
-                </h2>
-              ) : (
-                <h2 className="font-bold text-lg text-indigo-500">
-                  ${product.price}
-                </h2>
-              )}
+                )}
+              </h2>
 
               <div className="flex items-center">
-                <ProductRating onChange={() => {}} rating={product.rating} />
+                <ProductRating
+                  starColor="text-yellow-500"
+                  starSize={1.2}
+                  onChange={() => {}}
+                  rating={product.rating}
+                />
               </div>
             </div>
           </div>

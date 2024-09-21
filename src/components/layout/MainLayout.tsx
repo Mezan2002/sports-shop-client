@@ -13,7 +13,7 @@ const MainLayout = () => {
     <section>
       <NavigationBar />
       <div
-        className={`md:max-w-[1480px] md:mx-auto -z-50 ${
+        className={`md:max-w-[1480px] md:px-20 md:mx-auto -z-50 ${
           shouldShowFooter ? "py-8" : "py-0"
         }`}
       >
