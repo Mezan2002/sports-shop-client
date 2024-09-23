@@ -11,7 +11,7 @@ import { useEffect, useState } from "react";
 import { BiMinus, BiPlus } from "react-icons/bi";
 import { CiHeart, CiShoppingCart } from "react-icons/ci";
 import { FaAngleLeft, FaAngleRight } from "react-icons/fa";
-import { Link, useParams } from "react-router-dom";
+import { useNavigate, useParams } from "react-router-dom";
 import "swiper/css";
 import "swiper/css/navigation";
 import "swiper/css/pagination";
@@ -20,6 +20,8 @@ import { TProduct } from "../../types/types";
 import ProductRating from "./ProductRating/ProductRating";
 
 const SingleProduct = () => {
+  const navigate = useNavigate();
+
   const { id } = useParams();
   const { data, isLoading, isError, error } = useGetSingleProductByIdQuery(id);
 
@@ -29,7 +31,50 @@ const SingleProduct = () => {
   }, [isError, error]);
 
   const productData: TProduct = data?.data;
-  const [productQuantity, setProductQuantity] = useState(1);
+  useEffect(() => {
+    if (productData) {
+      setOrderData({
+        productId: productData._id,
+        name: productData.name,
+        image: productData.images[0],
+        price:
+          productData?.price.percentage_of_discount > 0
+            ? productData?.price.discounted_price
+            : productData?.price.regular_price,
+        availability:
+          productData?.stock.current_stock_amount > 0
+            ? "In stock"
+            : "Out of stock",
+
+        allColors: productData?.productAttributes.color.color_code,
+        allSizes: productData?.productAttributes.size,
+        color: "",
+        size: "",
+        quantity: 1,
+      });
+    }
+  }, [productData]);
+
+  const [isSizeNotSelected, setIsSizeNotSelected] = useState(false);
+  const [isColorNotSelected, setIsColorNotSelected] = useState(false);
+  const [orderData, setOrderData] = useState({
+    productId: productData?._id,
+    name: productData?.name,
+    image: productData?.images[0],
+    price:
+      productData?.price.percentage_of_discount > 0
+        ? productData?.price.discounted_price
+        : productData?.price.regular_price,
+    availability:
+      productData?.stock?.current_stock_amount > 0
+        ? "In stock"
+        : "Out of stock",
+    allColors: productData?.productAttributes.color.color_code,
+    allSizes: productData?.productAttributes.size,
+    color: "",
+    size: "",
+    quantity: 1,
+  });
 
   if (isLoading) {
     return (
@@ -38,6 +83,31 @@ const SingleProduct = () => {
       </div>
     );
   }
+
+  const handleSelectColor = (selectedColorCode: string) => {
+    setOrderData({ ...orderData, color: selectedColorCode });
+  };
+
+  const handleAddToCart = () => {
+    if (
+      productData.productAttributes.size!.length > 0 &&
+      orderData.size === ""
+    ) {
+      setIsSizeNotSelected(true);
+    } else if (
+      productData.productAttributes.color.color_code.length > 0 &&
+      orderData.color === ""
+    ) {
+      setIsColorNotSelected(true);
+    } else {
+      const cartFromStorage = localStorage.getItem("cart");
+      const cart = cartFromStorage ? JSON.parse(cartFromStorage) : [];
+      cart.push(orderData);
+      localStorage.setItem("cart", JSON.stringify(cart));
+      navigate("/cart");
+    }
+  };
+
   return (
     <section className="flex flex-col items-center justify-center mb-10">
       {/* Container for product layout */}
@@ -98,27 +168,56 @@ const SingleProduct = () => {
           </p>
           <div className="mb-5">
             {productData.productAttributes.size!.length > 0 && (
-              <div className="mb-2 flex items-center gap-5">
-                <p className="text-lg font-semibold text-gray">Sizes:</p>
-                <div className="flex items-center gap-2">
-                  {productData.productAttributes.size!.map((sz) => (
-                    <p className="border rounded-lg px-4 py-1 cursor-pointer">
-                      {sz}
-                    </p>
-                  ))}
+              <div>
+                <div className="mb-2 flex items-center gap-5">
+                  <p className="text-lg font-semibold text-gray">Sizes:</p>
+                  <div className="flex items-center gap-2">
+                    {productData.productAttributes.size!.map((sz) => (
+                      <p className="border rounded-lg px-4 py-1 cursor-pointer">
+                        {sz}
+                      </p>
+                    ))}
+                  </div>
                 </div>
+                {isSizeNotSelected && (
+                  <p className="text-red-500 text-sm font-semibold">
+                    Please select a size!
+                  </p>
+                )}
               </div>
             )}
 
             {productData.productAttributes.color.color_code.length > 0 && (
-              <div className="mb-2 flex items-center gap-5">
-                <p className="text-lg font-semibold text-gray">Colors:</p>
-                {productData.productAttributes.color.color_code.map((code) => (
-                  <div
-                    style={{ backgroundColor: code }}
-                    className="h-6 w-6 rounded-full border border-gray-600 cursor-pointer"
-                  />
-                ))}
+              <div>
+                <div className="mb-2 flex items-center gap-5">
+                  <p className="text-lg font-semibold text-gray">Colors:</p>
+                  {productData.productAttributes.color.color_code.map(
+                    (code) => (
+                      <div>
+                        <label className="flex items-center space-x-1 cursor-pointer">
+                          <input
+                            type="radio"
+                            value={code}
+                            name="color-code-radio"
+                            onChange={(event) =>
+                              handleSelectColor(event.target.value)
+                            }
+                            className="hidden peer"
+                          />
+                          <div
+                            style={{ backgroundColor: code }}
+                            className="w-6 h-6 rounded-full border-2 border-gray-300 peer-checked:p-1 peer-checked:border-black"
+                          />
+                        </label>
+                      </div>
+                    )
+                  )}
+                </div>
+                {isColorNotSelected && (
+                  <p className="text-red-500 text-sm font-semibold">
+                    Please select a color!
+                  </p>
+                )}
               </div>
             )}
           </div>
@@ -144,16 +243,24 @@ const SingleProduct = () => {
               <div className="w-8/12 h-12 flex justify-between items-center p-2 rounded-full bg-gray-light border">
                 <button
                   onClick={() =>
-                    productQuantity > 0 &&
-                    setProductQuantity(productQuantity - 1)
+                    orderData.quantity > 1 &&
+                    setOrderData({
+                      ...orderData,
+                      quantity: orderData.quantity - 1,
+                    })
                   }
                   className="bg-indigo-500 text-white rounded-full p-2"
                 >
                   <BiMinus />
                 </button>
-                <p>{productQuantity}</p>
+                <p>{orderData.quantity}</p>
                 <button
-                  onClick={() => setProductQuantity(productQuantity + 1)}
+                  onClick={() =>
+                    setOrderData({
+                      ...orderData,
+                      quantity: orderData.quantity + 1,
+                    })
+                  }
                   className="bg-indigo-500 text-white rounded-full p-2"
                 >
                   <BiPlus />
@@ -252,15 +359,15 @@ const SingleProduct = () => {
             >
               Add to wishlist <CiHeart size={26} className="text-gray" />
             </Button>
-            <Link to="/cart">
-              <Button
-                size="lg"
-                radius="full"
-                className="bg-indigo-500 text-white text-lg uppercase"
-              >
-                Add to Cart <CiShoppingCart size={26} className="text-white" />
-              </Button>
-            </Link>
+
+            <Button
+              size="lg"
+              radius="full"
+              onClick={handleAddToCart}
+              className="bg-indigo-500 text-white text-lg uppercase"
+            >
+              Add to Cart <CiShoppingCart size={26} className="text-white" />
+            </Button>
           </div>
         </div>
       </div>

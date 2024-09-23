@@ -5,7 +5,22 @@ import { RiArrowRightSLine, RiHeart3Line } from "react-icons/ri";
 import { Link } from "react-router-dom";
 import NavigationHeader from "../../components/shared/NavigationHeader/NavigationHeader";
 
+type TCartItem = {
+  productId: string;
+  name: string;
+  image: string;
+  price: string | number;
+  availability: number;
+  allColors?: string[];
+  allSizes?: string[];
+  color?: string;
+  size?: string;
+  quantity: number;
+};
+
 const Cart = () => {
+  const cartFromStorage = localStorage.getItem("cart");
+  const cartItems = cartFromStorage ? JSON.parse(cartFromStorage) : [];
   return (
     <section>
       <NavigationHeader />
@@ -16,69 +31,92 @@ const Cart = () => {
               Shoping cart
             </h3>
             <p className="font-medium text-gray-400">
-              You have 05 items in your cart
+              You have {cartItems.length < 9 && 0}
+              {cartItems.length} items in your cart
             </p>
           </div>
-          <div className="mt-5 flex items-center justify-between gap-5 border-b pb-5">
-            <div className="flex items-center gap-4">
-              <div className="bg-gray-light rounded-xl inline-block p-3">
-                <img
-                  src="https://th.bing.com/th/id/R.0288f2ee5dc6cbb800fc5fa3bc05a0b6?rik=jz2i2w1l3JXGIg&riu=http%3a%2f%2fwww.pngmart.com%2ffiles%2f4%2fCricket-Bat-PNG-Pic.png&ehk=WIGN7NaX376jzPl%2fo1QdaVy2Zk9K%2bfvdem2KnONl6Iw%3d&risl=1&pid=ImgRaw&r=0"
-                  className="h-36 w-28 object-cover"
-                  alt=""
-                />
-              </div>
-              <div>
-                <h6 className="text-xl font-semibold text-gray-800">
-                  Cricket bat chamso
-                </h6>
+          {cartItems.map((item: TCartItem) => {
+            const sizeCount = item.allSizes?.length ?? 0;
+            const colorCount = item.allColors?.length ?? 0;
 
-                <p className="font-medium">
-                  $50.00 | <span className="text-green-600">In stock</span>
-                </p>
-                <div className="flex items-center gap-3 mt-8">
-                  <Select
-                    radius="sm"
-                    placeholder="20"
-                    defaultSelectedKeys={["20"]}
-                    className="w-36"
-                  >
-                    <SelectItem key="20">20</SelectItem>
-                  </Select>
-                  <Select
-                    radius="sm"
-                    placeholder="White"
-                    defaultSelectedKeys={["white"]}
-                    className="w-36"
-                  >
-                    <SelectItem key="white">White</SelectItem>
-                  </Select>
-                  <div className="h-12 flex w-40 justify-between items-center p-2 rounded-full bg-gray-light border">
-                    <button className="bg-indigo-500 text-white rounded-full p-2">
-                      <BiPlus />
-                    </button>
-                    <p>05</p>
-                    <button className="bg-indigo-500 text-white rounded-full p-2">
-                      <BiMinus />
-                    </button>
+            return (
+              <div
+                key={item.productId}
+                className="mt-5 flex items-center justify-between gap-5 border-b pb-5"
+              >
+                <div className="flex items-center gap-4">
+                  <div className="bg-gray-light rounded-xl inline-block p-3">
+                    <img
+                      src={item.image}
+                      className="h-36 w-28 object-cover"
+                      alt=""
+                    />
+                  </div>
+                  <div>
+                    <h6 className="text-xl font-semibold text-gray-800">
+                      {item.name}
+                    </h6>
+
+                    <p className="font-medium">
+                      ${item.price} |{" "}
+                      <span className="text-green-600">
+                        {item.availability}
+                      </span>
+                    </p>
+                    <div className="flex items-center gap-3 mt-8">
+                      {sizeCount > 0 && (
+                        <Select
+                          radius="sm"
+                          placeholder={item.allSizes![0]}
+                          defaultSelectedKeys={item.allSizes![0]}
+                          className="w-36"
+                        >
+                          {item.allSizes!.map((size) => (
+                            <SelectItem key={size}>{size}</SelectItem>
+                          ))}
+                        </Select>
+                      )}
+                      {colorCount > 0 && (
+                        <Select
+                          radius="sm"
+                          placeholder={item.allColors![0]}
+                          defaultSelectedKeys={item.allColors![0]}
+                          className="w-36"
+                        >
+                          {item.allColors!.map((color) => (
+                            <SelectItem key={color}>{color}</SelectItem>
+                          ))}
+                        </Select>
+                      )}
+
+                      <div className="h-12 flex w-40 justify-between items-center p-2 rounded-full bg-gray-light border">
+                        <button className="bg-indigo-500 text-white rounded-full p-2">
+                          <BiMinus />
+                        </button>
+                        <p>{item.quantity}</p>
+                        <button className="bg-indigo-500 text-white rounded-full p-2">
+                          <BiPlus />
+                        </button>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+                <div>
+                  <h5 className="text-2xl font-semibold text-indigo-500 mb-14 text-right">
+                    ${Number(item.price) * Number(item.quantity)}
+                  </h5>
+                  <div className="flex items-center gap-3">
+                    <Button className="bg-transparent border text-gray font-medium">
+                      Add to wishlist <RiHeart3Line size={20} />
+                    </Button>
+                    <Button className="bg-red-500 text-white font-medium">
+                      Delete <FaRegTrashCan size={16} />
+                    </Button>
                   </div>
                 </div>
               </div>
-            </div>
-            <div>
-              <h5 className="text-2xl font-semibold text-indigo-500 mb-14 text-right">
-                $50.00
-              </h5>
-              <div className="flex items-center gap-3">
-                <Button className="bg-transparent border text-gray font-medium">
-                  Add to wishlist <RiHeart3Line size={20} />
-                </Button>
-                <Button className="bg-red-500 text-white font-medium">
-                  Delete <FaRegTrashCan size={16} />
-                </Button>
-              </div>
-            </div>
-          </div>
+            );
+          })}
         </div>
         <div className="flex-1 border rounded-lg p-10 flex flex-col w-10/12 mx-auto">
           <h3 className="text-3xl font-semibold text-gray mb-5 uppercase">
