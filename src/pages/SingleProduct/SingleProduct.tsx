@@ -15,12 +15,15 @@ import { useNavigate, useParams } from "react-router-dom";
 import "swiper/css";
 import "swiper/css/navigation";
 import "swiper/css/pagination";
+import { addToCart } from "../../redux/features/cart/cartSlice";
 import { useGetSingleProductByIdQuery } from "../../redux/features/product/productsApi";
+import { useAppDispatch } from "../../redux/hooks";
 import { TProduct } from "../../types/types";
 import ProductRating from "./ProductRating/ProductRating";
 
 const SingleProduct = () => {
   const navigate = useNavigate();
+  const dispatch = useAppDispatch();
 
   const { id } = useParams();
   const { data, isLoading, isError, error } = useGetSingleProductByIdQuery(id);
@@ -100,10 +103,7 @@ const SingleProduct = () => {
     ) {
       setIsColorNotSelected(true);
     } else {
-      const cartFromStorage = localStorage.getItem("cart");
-      const cart = cartFromStorage ? JSON.parse(cartFromStorage) : [];
-      cart.push(orderData);
-      localStorage.setItem("cart", JSON.stringify(cart));
+      dispatch(addToCart(orderData));
       navigate("/cart");
     }
   };

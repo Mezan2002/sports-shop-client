@@ -4,23 +4,12 @@ import { FaRegTrashCan } from "react-icons/fa6";
 import { RiArrowRightSLine, RiHeart3Line } from "react-icons/ri";
 import { Link } from "react-router-dom";
 import NavigationHeader from "../../components/shared/NavigationHeader/NavigationHeader";
-
-type TCartItem = {
-  productId: string;
-  name: string;
-  image: string;
-  price: string | number;
-  availability: number;
-  allColors?: string[];
-  allSizes?: string[];
-  color?: string;
-  size?: string;
-  quantity: number;
-};
+import { useAppSelector } from "../../redux/hooks";
+import { TCartItem } from "../../types/types";
 
 const Cart = () => {
-  const cartFromStorage = localStorage.getItem("cart");
-  const cartItems = cartFromStorage ? JSON.parse(cartFromStorage) : [];
+  const cartItems = useAppSelector((state) => state.cart.cart);
+
   return (
     <section>
       <NavigationHeader />

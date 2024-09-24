@@ -51,6 +51,19 @@ export type TFilter = {
   sortOrder: string;
 };
 
+export type TCartItem = {
+  productId: string;
+  name: string;
+  image: string;
+  price: string | number;
+  availability: string;
+  allColors?: string[];
+  allSizes?: string[];
+  color?: string;
+  size?: string;
+  quantity: number;
+};
+
 export type TPriceSliderProps = {
   updateFilter: (
     filterKey: keyof TFilter,
