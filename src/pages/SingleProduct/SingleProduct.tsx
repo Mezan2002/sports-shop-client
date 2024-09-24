@@ -49,9 +49,12 @@ const SingleProduct = () => {
             ? "In stock"
             : "Out of stock",
 
-        allColors: productData?.productAttributes.color.color_code,
+        allColors: productData?.productAttributes.color,
         allSizes: productData?.productAttributes.size,
-        color: "",
+        selectedColor: {
+          color_name: "",
+          color_code: "",
+        },
         size: "",
         quantity: 1,
       });
@@ -72,9 +75,12 @@ const SingleProduct = () => {
       productData?.stock?.current_stock_amount > 0
         ? "In stock"
         : "Out of stock",
-    allColors: productData?.productAttributes.color.color_code,
+    allColors: productData?.productAttributes.color,
     allSizes: productData?.productAttributes.size,
-    color: "",
+    selectedColor: {
+      color_name: "",
+      color_code: "",
+    },
     size: "",
     quantity: 1,
   });
@@ -87,8 +93,11 @@ const SingleProduct = () => {
     );
   }
 
-  const handleSelectColor = (selectedColorCode: string) => {
-    setOrderData({ ...orderData, color: selectedColorCode });
+  const handleSelectColor = (selectedColorCode: {
+    color_name: string;
+    color_code: string;
+  }) => {
+    setOrderData({ ...orderData, selectedColor: selectedColorCode });
   };
 
   const handleAddToCart = () => {
@@ -98,8 +107,8 @@ const SingleProduct = () => {
     ) {
       setIsSizeNotSelected(true);
     } else if (
-      productData.productAttributes.color.color_code.length > 0 &&
-      orderData.color === ""
+      productData?.productAttributes?.color.length > 0 &&
+      orderData.selectedColor.color_code === ""
     ) {
       setIsColorNotSelected(true);
     } else {
@@ -107,6 +116,10 @@ const SingleProduct = () => {
       navigate("/cart");
     }
   };
+
+  const productColors = productData.productAttributes.color
+    .map((item) => item.color_name)
+    .join(" & ");
 
   return (
     <section className="flex flex-col items-center justify-center mb-10">
@@ -164,7 +177,7 @@ const SingleProduct = () => {
             {productData?.name}
           </h1>
           <p className="text-5xl text-gray mb-8 font-extralight">
-            {productData.productAttributes.color.color_name}
+            {productColors}
           </p>
           <div className="mb-5">
             {productData.productAttributes.size!.length > 0 && (
@@ -187,31 +200,27 @@ const SingleProduct = () => {
               </div>
             )}
 
-            {productData.productAttributes.color.color_code.length > 0 && (
+            {productData.productAttributes.color.length > 0 && (
               <div>
                 <div className="mb-2 flex items-center gap-5">
                   <p className="text-lg font-semibold text-gray">Colors:</p>
-                  {productData.productAttributes.color.color_code.map(
-                    (code) => (
-                      <div>
-                        <label className="flex items-center space-x-1 cursor-pointer">
-                          <input
-                            type="radio"
-                            value={code}
-                            name="color-code-radio"
-                            onChange={(event) =>
-                              handleSelectColor(event.target.value)
-                            }
-                            className="hidden peer"
-                          />
-                          <div
-                            style={{ backgroundColor: code }}
-                            className="w-6 h-6 rounded-full border-2 border-gray-300 peer-checked:p-1 peer-checked:border-black"
-                          />
-                        </label>
-                      </div>
-                    )
-                  )}
+                  {productData.productAttributes.color.map((color) => (
+                    <div>
+                      <label className="flex items-center space-x-1 cursor-pointer">
+                        <input
+                          type="radio"
+                          value={color.color_code}
+                          name="color-code-radio"
+                          onChange={() => handleSelectColor(color)}
+                          className="hidden peer"
+                        />
+                        <div
+                          style={{ backgroundColor: color.color_code }}
+                          className="w-6 h-6 rounded-full border-2 border-gray-300 peer-checked:p-1 peer-checked:border-black"
+                        />
+                      </label>
+                    </div>
+                  ))}
                 </div>
                 {isColorNotSelected && (
                   <p className="text-red-500 text-sm font-semibold">
@@ -300,9 +309,7 @@ const SingleProduct = () => {
                   </p>
                   <p className="text-sm font-medium text-gray-700 capitalize">
                     Color:{" "}
-                    <span className="text-gray-500">
-                      {productData.productAttributes.color.color_name}
-                    </span>
+                    <span className="text-gray-500">{productColors}</span>
                   </p>
                   <p className="text-sm font-medium text-gray-700 capitalize">
                     Price:{" "}

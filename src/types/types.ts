@@ -20,10 +20,12 @@ export type TProduct = {
   };
   productAttributes: {
     size?: string[];
-    color: {
-      color_code: string[];
-      color_name: string;
-    };
+    color: [
+      {
+        color_name: string;
+        color_code: string;
+      }
+    ];
   };
   rating: number;
   images: string[];
@@ -57,10 +59,18 @@ export type TCartItem = {
   image: string;
   price: string | number;
   availability: string;
-  allColors?: string[];
+  allColors?: [
+    {
+      color_name: string;
+      color_code: string;
+    }
+  ];
   allSizes?: string[];
-  color?: string;
-  size?: string;
+  selectedColor?: {
+    color_name: string;
+    color_code: string;
+  };
+  selectedSize?: string;
   quantity: number;
 };
 

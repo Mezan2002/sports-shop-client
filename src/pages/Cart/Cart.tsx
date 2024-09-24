@@ -68,12 +68,14 @@ const Cart = () => {
                       {colorCount > 0 && (
                         <Select
                           radius="sm"
-                          placeholder={item.allColors![0]}
-                          defaultSelectedKeys={item.allColors![0]}
+                          placeholder={item.selectedColor?.color_name}
+                          defaultSelectedKeys={item.selectedColor?.color_name}
                           className="w-36"
                         >
                           {item.allColors!.map((color) => (
-                            <SelectItem key={color}>{color}</SelectItem>
+                            <SelectItem key={color.color_name}>
+                              {color.color_name}
+                            </SelectItem>
                           ))}
                         </Select>
                       )}
