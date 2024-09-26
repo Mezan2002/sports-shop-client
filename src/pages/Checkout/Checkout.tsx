@@ -1,8 +1,40 @@
 import { Button, cn, Input, Radio, RadioGroup } from "@nextui-org/react";
+import { useState } from "react";
 import { RiArrowRightSLine } from "react-icons/ri";
 import NavigationHeader from "../../components/shared/NavigationHeader/NavigationHeader";
+import { useAppSelector } from "../../redux/hooks";
+import { TCartItem } from "../../types/types";
 
 const Checkout = () => {
+  const cartItems = useAppSelector((state) => state.cart.cart);
+
+  const [checkoutInfo, setCheckoutInfo] = useState({
+    firstName: "",
+    lastName: "",
+    email: "",
+    phone: "",
+    address: "",
+    addressType: "",
+    paymentMethod: "",
+  });
+
+  // Calculate subtotal
+  const subtotal = cartItems.reduce(
+    (acc, item) => acc + Number(item.price) * item.quantity,
+    0
+  );
+
+  // Calculate VAT (15% of subtotal)
+  const vat = subtotal * 0.15;
+
+  // Calculate Total (subtotal + VAT)
+  const total = subtotal + vat;
+
+  // Disable the button if any field is empty
+  const isCheckoutDisabled = Object.values(checkoutInfo).some(
+    (value) => value === ""
+  );
+
   const CustomRadio = (props) => {
     const { children, ...otherProps } = props;
 
@@ -12,7 +44,7 @@ const Checkout = () => {
         classNames={{
           base: cn(
             "inline-flex m-0 bg-content1 hover:bg-content2 items-center justify-between",
-            "flex-row-reverse max-w-[300px] cursor-pointer rounded-lg gap-4 p-4 border-2 border",
+            "flex-row-reverse max-w-full cursor-pointer rounded-lg gap-4 p-4 border-2 border",
             "data-[selected=true]:border-indigo-500 border"
           ),
         }}
@@ -36,6 +68,9 @@ const Checkout = () => {
               label="First name"
               isRequired
               radius="sm"
+              onChange={(e) =>
+                setCheckoutInfo({ ...checkoutInfo, firstName: e.target.value })
+              }
             />
             <Input
               placeholder="Doppler"
@@ -43,6 +78,20 @@ const Checkout = () => {
               label="Last name"
               isRequired
               radius="sm"
+              onChange={(e) =>
+                setCheckoutInfo({ ...checkoutInfo, lastName: e.target.value })
+              }
+            />
+            <Input
+              placeholder="john@xyz.com"
+              labelPlacement="outside"
+              label="Email address"
+              type="email"
+              isRequired
+              radius="sm"
+              onChange={(e) =>
+                setCheckoutInfo({ ...checkoutInfo, email: e.target.value })
+              }
             />
             <Input
               placeholder="1234567891"
@@ -50,6 +99,12 @@ const Checkout = () => {
               label="Phone Number"
               isRequired
               radius="sm"
+              onChange={(e) =>
+                setCheckoutInfo({
+                  ...checkoutInfo,
+                  phone: `+880${e.target.value}`,
+                })
+              }
               startContent={
                 <div>
                   <p className="font-medium text-gray">+880</p>
@@ -62,111 +117,118 @@ const Checkout = () => {
               label="Address"
               isRequired
               radius="sm"
+              onChange={(e) =>
+                setCheckoutInfo({ ...checkoutInfo, address: e.target.value })
+              }
             />
 
-            <RadioGroup isRequired label="Address type">
-              <Radio value="home">Home (Full day delivery)</Radio>
-              <Radio value="office">Office (Delivery between 10AM - 5PM)</Radio>
+            <RadioGroup
+              orientation="horizontal"
+              isRequired
+              label="Address type"
+              onValueChange={(value) =>
+                setCheckoutInfo({ ...checkoutInfo, addressType: value })
+              }
+            >
+              <Radio value="home">
+                <span>Home (Full day delivery)</span>
+              </Radio>
+              <Radio value="office">
+                <span>Office (Delivery between 10AM - 5PM)</span>
+              </Radio>
             </RadioGroup>
+            <div className="col-span-2">
+              <RadioGroup
+                onValueChange={(value) =>
+                  setCheckoutInfo({ ...checkoutInfo, paymentMethod: value })
+                }
+                label="Payment method"
+                isRequired
+              >
+                <div className="grid grid-cols-2 gap-2">
+                  <CustomRadio value="cash_on_delivery">
+                    <div className="flex items-center gap-4">
+                      <img
+                        className="size-10"
+                        src="/src/assets/images/cash-on-delivery.png"
+                      />
+                      <p className="text-lg font-semibold text-gray">
+                        Cash on delivery
+                      </p>
+                    </div>
+                  </CustomRadio>
 
-            <RadioGroup label="Payment method" isRequired>
-              <CustomRadio value="cash_on_delivery">
-                Cash on delivery
-              </CustomRadio>
-            </RadioGroup>
+                  <CustomRadio isDisabled value="stripe">
+                    <div className="flex items-center gap-4">
+                      <img
+                        className="size-10"
+                        src="/src/assets/images/stripe.png"
+                      />
+                      <p className="text-lg font-semibold text-gray">Stripe</p>
+                    </div>
+                  </CustomRadio>
+                </div>
+              </RadioGroup>
+            </div>
           </form>
         </div>
         <div className="flex-1 shadow mt-10 rounded-2xl p-5">
-          <h4 className="text-2xl font-semibold text-gray border-b pb-3">
+          <h4 className="text-2xl font-semibold text-gray pb-3">
             Order summary
           </h4>
           <div>
-            <div className="flex items-center gap-2 border-b pb-3 mt-3">
-              <div className="bg-white rounded-xl inline-block p-3">
-                <img
-                  src="https://th.bing.com/th/id/R.0288f2ee5dc6cbb800fc5fa3bc05a0b6?rik=jz2i2w1l3JXGIg&riu=http%3a%2f%2fwww.pngmart.com%2ffiles%2f4%2fCricket-Bat-PNG-Pic.png&ehk=WIGN7NaX376jzPl%2fo1QdaVy2Zk9K%2bfvdem2KnONl6Iw%3d&risl=1&pid=ImgRaw&r=0"
-                  className="h-20 w-16 object-cover"
-                  alt=""
-                />
-              </div>
-              <div>
-                <h6 className="text-xl font-semibold text-gray-800">
-                  Cricket bat chamso
-                </h6>
-                <div className="flex items-center gap-4 my-1.5">
-                  <p className="text-sm font-medium text-gray-lighter">
-                    Size <span className="text-gray text-base">16m</span>{" "}
-                  </p>
-                  <p className="text-sm font-medium text-gray-lighter">
-                    Color <span className="text-gray text-base">White</span>{" "}
-                  </p>
+            {cartItems.map((item: TCartItem) => (
+              <div className="flex items-center gap-2 border-b pb-3 mt-3">
+                <div className="bg-white rounded-xl inline-block p-3">
+                  <img
+                    src={item.image}
+                    className="h-20 w-16 object-cover"
+                    alt=""
+                  />
                 </div>
-                <h6 className="text-base font-bold text-gray">
-                  $50.00 <span className="text-gray-lighter">x 2</span>{" "}
-                </h6>
-              </div>
-            </div>
-            <div className="flex items-center gap-2 border-b pb-3 mt-3">
-              <div className="bg-white rounded-xl inline-block p-3">
-                <img
-                  src="https://th.bing.com/th/id/R.0288f2ee5dc6cbb800fc5fa3bc05a0b6?rik=jz2i2w1l3JXGIg&riu=http%3a%2f%2fwww.pngmart.com%2ffiles%2f4%2fCricket-Bat-PNG-Pic.png&ehk=WIGN7NaX376jzPl%2fo1QdaVy2Zk9K%2bfvdem2KnONl6Iw%3d&risl=1&pid=ImgRaw&r=0"
-                  className="h-20 w-16 object-cover"
-                  alt=""
-                />
-              </div>
-              <div>
-                <h6 className="text-xl font-semibold text-gray-800">
-                  Cricket bat chamso
-                </h6>
-                <div className="flex items-center gap-4 my-1.5">
-                  <p className="text-sm font-medium text-gray-lighter">
-                    Size <span className="text-gray text-base">16m</span>{" "}
-                  </p>
-                  <p className="text-sm font-medium text-gray-lighter">
-                    Color <span className="text-gray text-base">White</span>{" "}
-                  </p>
+                <div>
+                  <h6 className="text-xl font-semibold text-gray-800">
+                    {item.name}
+                  </h6>
+                  <div className="flex items-center gap-4 my-1.5">
+                    {item.selectedSize && (
+                      <p className="text-sm font-medium text-gray-lighter">
+                        Size{" "}
+                        <span className="text-gray text-base">
+                          {item.selectedSize}
+                        </span>{" "}
+                      </p>
+                    )}
+                    {item.selectedColor && (
+                      <p className="text-sm font-medium text-gray-lighter">
+                        Color{" "}
+                        <span className="text-gray text-base">
+                          {item.selectedColor}
+                        </span>{" "}
+                      </p>
+                    )}
+                  </div>
+                  <h6 className="text-base font-bold text-gray">
+                    {item.price}{" "}
+                    <span className="text-gray-lighter">x {item.quantity}</span>{" "}
+                  </h6>
                 </div>
-                <h6 className="text-base font-bold text-gray">
-                  $50.00 <span className="text-gray-lighter">x 2</span>{" "}
-                </h6>
               </div>
-            </div>
-            <div className="flex items-center gap-2 border-b pb-3 mt-3">
-              <div className="bg-white rounded-xl inline-block p-3">
-                <img
-                  src="https://th.bing.com/th/id/R.0288f2ee5dc6cbb800fc5fa3bc05a0b6?rik=jz2i2w1l3JXGIg&riu=http%3a%2f%2fwww.pngmart.com%2ffiles%2f4%2fCricket-Bat-PNG-Pic.png&ehk=WIGN7NaX376jzPl%2fo1QdaVy2Zk9K%2bfvdem2KnONl6Iw%3d&risl=1&pid=ImgRaw&r=0"
-                  className="h-20 w-16 object-cover"
-                  alt=""
-                />
-              </div>
-              <div>
-                <h6 className="text-xl font-semibold text-gray-800">
-                  Cricket bat chamso
-                </h6>
-                <div className="flex items-center gap-4 my-1.5">
-                  <p className="text-sm font-medium text-gray-lighter">
-                    Size <span className="text-gray text-base">16m</span>{" "}
-                  </p>
-                  <p className="text-sm font-medium text-gray-lighter">
-                    Color <span className="text-gray text-base">White</span>{" "}
-                  </p>
-                </div>
-                <h6 className="text-base font-bold text-gray">
-                  $50.00 <span className="text-gray-lighter">x 2</span>{" "}
-                </h6>
-              </div>
-            </div>
+            ))}
           </div>
-          <h4 className="text-3xl font-semibold text-gray flex items-center justify-between my-5">
-            Total <span>$200.00</span>{" "}
-          </h4>
+
+          <div className="text-xl font-semibold text-gray flex items-center justify-between my-5">
+            <p>Total</p>{" "}
+            <span className="flex items-center gap-1">${total.toFixed(2)}</span>
+          </div>
 
           <Button
             size="lg"
-            radius="sm"
-            className="text-2xl font-medium text-white bg-indigo-500 w-full"
+            radius="full"
+            isDisabled={isCheckoutDisabled}
+            className="text-xl font-semibold text-white bg-indigo-500 w-full"
           >
-            Pay now <RiArrowRightSLine size={24} className="text-white" />
+            Checkout <RiArrowRightSLine size={24} className="text-white" />
           </Button>
         </div>
       </div>

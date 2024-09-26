@@ -66,10 +66,7 @@ export type TCartItem = {
     }
   ];
   allSizes?: string[];
-  selectedColor?: {
-    color_name: string;
-    color_code: string;
-  };
+  selectedColor?: string;
   selectedSize?: string;
   quantity: number;
 };

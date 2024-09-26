@@ -13,8 +13,10 @@ import {
   AiOutlineUser,
 } from "react-icons/ai";
 import { Link } from "react-router-dom";
+import { useAppSelector } from "../../../redux/hooks";
 
 const NavigationBar = () => {
+  const cartItems = useAppSelector((state) => state.cart.cart);
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const menuItems = [
     "Home",
@@ -95,7 +97,11 @@ const NavigationBar = () => {
           </div>
           <Link to="/cart" className="mt-2">
             <div className="flex items-center">
-              <Badge content="0" size="md" className="bg-indigo-500 text-white">
+              <Badge
+                content={cartItems.length}
+                size="md"
+                className="bg-indigo-500 text-white"
+              >
                 <AiOutlineShoppingCart size={32} />
               </Badge>
               <div className="ml-2 mb-1 hidden md:block">

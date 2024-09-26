@@ -51,10 +51,7 @@ const SingleProduct = () => {
 
         allColors: productData?.productAttributes.color,
         allSizes: productData?.productAttributes.size,
-        selectedColor: {
-          color_name: "",
-          color_code: "",
-        },
+        selectedColor: "",
         size: "",
         quantity: 1,
       });
@@ -77,10 +74,7 @@ const SingleProduct = () => {
         : "Out of stock",
     allColors: productData?.productAttributes.color,
     allSizes: productData?.productAttributes.size,
-    selectedColor: {
-      color_name: "",
-      color_code: "",
-    },
+    selectedColor: "",
     size: "",
     quantity: 1,
   });
@@ -93,10 +87,7 @@ const SingleProduct = () => {
     );
   }
 
-  const handleSelectColor = (selectedColorCode: {
-    color_name: string;
-    color_code: string;
-  }) => {
+  const handleSelectColor = (selectedColorCode: string) => {
     setOrderData({ ...orderData, selectedColor: selectedColorCode });
   };
 
@@ -108,7 +99,7 @@ const SingleProduct = () => {
       setIsSizeNotSelected(true);
     } else if (
       productData?.productAttributes?.color.length > 0 &&
-      orderData.selectedColor.color_code === ""
+      orderData.selectedColor === ""
     ) {
       setIsColorNotSelected(true);
     } else {
@@ -211,7 +202,7 @@ const SingleProduct = () => {
                           type="radio"
                           value={color.color_code}
                           name="color-code-radio"
-                          onChange={() => handleSelectColor(color)}
+                          onChange={() => handleSelectColor(color.color_name)}
                           className="hidden peer"
                         />
                         <div
