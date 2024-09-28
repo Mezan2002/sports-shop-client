@@ -2,14 +2,16 @@ export type TProduct = {
   _id: string;
   id: string;
   name: string;
+  description: string;
   brand: string;
+  rating: number;
+  images: string[];
   price: {
     regular_price: number;
     discounted_price: number;
     percentage_of_discount: number;
     currency: string;
   };
-  description: string;
   stock: {
     current_stock_amount: number;
     low_stock_amount: number;
@@ -27,8 +29,13 @@ export type TProduct = {
       }
     ];
   };
-  rating: number;
-  images: string[];
+  promoCode: {
+    code: string;
+    discount: number;
+    startDate: Date;
+    endDate: Date;
+    isActive: boolean;
+  };
 };
 
 export type TCategory = {
